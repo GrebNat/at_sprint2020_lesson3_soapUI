@@ -23,6 +23,7 @@ public class CountryDto2 {
 	private List<String> topLevelDomain;
 	private List<String> currencies;
 	private List<String> languages;
+	private String field2;
 
 	public CountryDto2(String name, String capital, List<String> altSpellings, String relevance, String region, String subregion, Translations translations, Long population, List<Float> latlng, String demonym, Long area, Float gini, List<String> timezones, List<String> callingCodes, List<String> topLevelDomain, List<String> currencies, List<String> languages) {
 		this.name = name;

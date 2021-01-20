@@ -9,75 +9,87 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class GetCountriesCountByCode {
+//
+//    @Test
+//    void test1() {
+//        CountryDto country = new CountryDto()
+//                .name("Russia")
+//                .capital("Moscow");
+//    }
 
-	//------------------------Simple assertion with testNG
-	@Test(description = "Get country by one Code")
-	public void getCountryByName() {
-		String countryName = "Aruba";
+    //------------------------Simple assertion with testNG
+    @Test(description = "Get country by one Code")
+    public void getCountryByName() {
+        String countryName = "Aruba";
 
-		CountryDto[] country = new RestCountriesService().getCountryByName(countryName);
+        CountryDto[] country = new RestCountriesService().getCountryByName(countryName);
 
-		assertEquals(country.length, 1, "Incorrect list of countries");
-		assertEquals(country[0].getName(), countryName, "Incorrect county name");
-	}
+        assertEquals(country.length, 1, "Incorrect list of countries");
+        assertEquals(country[0].getName(), countryName, "Incorrect county name");
+    }
 
-	@Test(description = "Get country by one Code")
-	void getCountryByCode() {
-		String countryCode = "rus";
-		String countryName = "Russia";
+    @Test(description = "Get country by one Code")
+    void getCountryByCode() {
+        String countryCode = "rus";
+        String countryName = "Russia";
 
-		CountryDto[] country = new RestCountriesService().getCountryByCode(countryCode);
+        CountryDto[] country = new RestCountriesService().getCountryByCode(countryCode);
 
-		assertEquals(country.length, 1, "Incorrect list of countries");
-		assertEquals(country[0].getName(), countryName, "Incorrect county name");
-	}
+        assertEquals(country.length, 1, "Incorrect list of countries");
+        assertEquals(country[0].getName(), countryName, "Incorrect county name");
+    }
 
-	//----------------------------------------Custom assertion
-	@Test(description = "Get country by one Code")
-	void getCountrytByCode2() {
-		String countryCode = "rus";
-		String countryName = "Russia";
+    //----------------------------------------Custom assertion
+    @Test(description = "Get country by one Code")
+    void getCountrytByCode2() {
+        String countryCode = "rus";
+        String countryName = "Russia";
 
-		CountryDto[] countries = new RestCountriesService()
-				.getCountryByCode(countryCode);
-
-		new RestCountriesAssertions(countries)
-				.verifyCountry(countryName)
-				.verifyCountries(countryName, countryName);
-	}
-
-	@Test(description = "Get country by one Code")
-	void getCountryByTwoCode2() {
-		String countryCode = "rus;nor";
-
-		CountryDto[] countries = new RestCountriesService()
-				.getCountryByCode(countryCode);
-
-		new RestCountriesAssertions(countries)
-				.verifyCountries("Russia", "Norway");
-	}
-
-	//-----------------------------------Data Provider
-
-	@DataProvider
-	public Object[][] countriesData() {
-		return new Object[][]{
-				{"145","rus", "Russia"},
-				{"4858","rus;nor", "Russia", "Norway"},
-				{"6869","rus;nor", "Russia", "Norway"},
-				{"9373","ua", "Ukraine"},
-				{"4749","rus;nor", "Angola", "Norway"},
-				{"5968","rus;nor", "Russia", "Norway"},
+		CountryDto[] countriesRussia = new CountryDto[]{
+				new CountryDto().setName("Russia")
 		};
-	}
 
-	@Test(description = "Get country by one Code", dataProvider = "countriesData")
-	void getCountryByTwoCodeMultiple(String testId, String countryCodes, String... expectedCountriesNames) {
+		CountryDto[] countriesActual = new RestCountriesService()
+                .getCountryByCode(countryCode);
 
-		CountryDto[] countries = new RestCountriesService()
-				.getCountryByCode(countryCodes);
+        new RestCountriesAssertions(countriesActual)
+				.verifyDataEqual(countriesRussia)
+                .verifyCountry(countryName)
+                .verifyCountries(countryName, countryName);
+    }
 
-		new RestCountriesAssertions(countries)
-				.verifyCountries(expectedCountriesNames);
-	}
+    @Test(description = "Get country by one Code")
+    void getCountryByTwoCode2() {
+        String countryCode = "rus;nor";
+
+        CountryDto[] countries = new RestCountriesService()
+                .getCountryByCode(countryCode);
+
+        new RestCountriesAssertions(countries)
+                .verifyCountries("Russia", "Norway");
+    }
+
+    //-----------------------------------Data Provider
+
+    @DataProvider
+    public Object[][] countriesData() {
+        return new Object[][]{
+                {"PYATEROCHKA_1", "rus", "Russia"},
+                {"PYATEROCHKA_6", "rus;nor", "Russia", "Norway"},
+                {"PYATEROCHKA_89", "rus;nor", "Russia", "Norway"},
+                {"PYATEROCHKA_76_1", "ua", "Ukraine"},
+                {"PYATEROCHKA_76_2", "rus;nor", "Angola", "Norway"},
+                {"PYATEROCHKA_76_3", "rus;nor", "Russia", "Norway"},
+        };
+    }
+
+    @Test(description = "Get country by one Code", dataProvider = "countriesData")
+    void getCountryByTwoCodeMultiple(String testId, String countryCodes, String... expectedCountriesNames) {
+
+        CountryDto[] countries = new RestCountriesService()
+                .getCountryByCode(countryCodes);
+
+        new RestCountriesAssertions(countries)
+                .verifyCountries(expectedCountriesNames);
+    }
 }

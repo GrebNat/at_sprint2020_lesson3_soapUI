@@ -6,7 +6,7 @@ import countries.dto.CountryDto;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RestCountriesService {
+public class RestCountriesService extends CommonService {
 
     private RestCountriesService restCountriesService;
 

@@ -1,7 +1,6 @@
 package countries.service;
 
 import countries.dto.CountryDto;
-import org.testng.Assert;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.*;
@@ -26,5 +25,11 @@ public class RestCountriesAssertions {
 				stream(counties).map(CountryDto::getName).collect(toList()).toArray(new String[]{}),
 				countryName,
 				"Incorrect list of countries");
+	}
+
+	public RestCountriesAssertions verifyDataEqual(CountryDto[] res){
+		assertEquals(counties, res);
+
+		return this;
 	}
 }

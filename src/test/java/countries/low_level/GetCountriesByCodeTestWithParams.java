@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
 
 public class GetCountriesByCodeTestWithParams {
-	private final String CODES = "usa;nor";
+	private final String DUMMY_CODES = "usa;nor";
 	private final String FIRST_COUNTY = "USA";
 	private final String FIRST_COUNTY_ALT_NAME = "CO";
 	private final String SECOND_COUNTY = "Norway";
@@ -53,7 +53,7 @@ public class GetCountriesByCodeTestWithParams {
 	void getCountryByOneCodeWitiConfigLogPretty() {
 
 		given(REQUEST_SPECIFICATION)
-				.param("codes", CODES)
+				.param("codes", DUMMY_CODES)
 				.get(COUNTRY_BY_CODE_ENDPOINT)
 				.then()
 				.statusCode(HttpStatus.SC_OK).and()

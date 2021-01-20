@@ -4,10 +4,10 @@ package countries.service;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.SneakyThrows;
+import org.hamcrest.Matchers;
 
 import java.util.Map;
 import java.util.Properties;
@@ -26,19 +26,25 @@ public class CommonService {
     }
 
     public CommonService() {
-    	RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         REQUEST_SPECIFICATION = new RequestSpecBuilder()
                 .setBaseUri("https://restcountries-v1.p.rapidapi.com/")
+               //.setBaseUri(ServiceProps.getBaseUrl())
+
+                // .setBaseUri(getProperties().getProperty("baseurl"))
                 .addHeader("X-RapidAPI-Host", "restcountries-v1.p.rapidapi.com")
                 .addHeader("X-RapidAPI-Key", getProperties().get("X-RapidAPI-Key").toString())
                 .addFilter(new RequestLoggingFilter())
                 //.addFilter(new ResponseLoggingFilter())
-				.build();
+                .build();
     }
 
     public Response getNoParams(String uri) {
-		given(REQUEST_SPECIFICATION).get(uri).then().statusCode(300);
-        return given(REQUEST_SPECIFICATION).get(uri);
+        Response response = given(REQUEST_SPECIFICATION).get(uri);
+        response.then()
+                .statusCode(Matchers.lessThan(300))
+                .statusCode(Matchers.greaterThanOrEqualTo(200));
+        return response;
     }
 
     public Response getWithParams(String uri, Map<String, Object> params) {

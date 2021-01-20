@@ -3,10 +3,8 @@ package countries.functional_level;
 import countries.dto.CountryDto;
 import countries.service.RestCountriesService;
 import org.assertj.core.api.Condition;
-import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
 
-import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetCountriesCountByCodeAssertJ {
@@ -19,17 +17,20 @@ public class GetCountriesCountByCodeAssertJ {
                 .getCountryByCode(countryCode);
 
         assertThat(10)
+                .withFailMessage("jhgskljd")
                 .isLessThan(13)
                 .isGreaterThan(12);
 
-        org.assertj.core.api.Condition<CountryDto> russia = new Condition<>(
-                m -> m.getName().equals("Russia"), "name equal Russia");
-        org.assertj.core.api.Assertions.assertThat(countries[0]).is(russia);
-
         assertThat(countries)
                 .as("what is happened there")
+                .contains(new CountryDto().setName("Russia"))
                 .isEmpty();
 
-    }
+        org.assertj.core.api.Condition<CountryDto> russia = new Condition<>(
+                m -> {
+                    return m.getName().equals("Russia") && m.getCapital().equals("Moscow");
+                }, "name equal Russia");
 
+        org.assertj.core.api.Assertions.assertThat(countries[0]).is(russia);
+    }
 }

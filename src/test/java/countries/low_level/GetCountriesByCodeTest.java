@@ -6,7 +6,6 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import lombok.SneakyThrows;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -16,6 +15,8 @@ import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 import static java.util.Arrays.asList;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.hamcrest.Matchers.*;
 
 public class GetCountriesByCodeTest {
@@ -39,11 +40,15 @@ public class GetCountriesByCodeTest {
     @Test(description = "Get country by one code")
 //----------------------simple fail test without headers
     void getCountryByOneCodeFail() {
-        RestAssured
-                .post("https://restcountries-v1.p.rapidapi.com/alpha/?codes=co;nor")
-                .then().statusCode(401).and().body(is(""));
-    }
+        RestAssured.given()
+                .get("https://restcountries-v1.p.rapidapi.com/alpha/?codes=co;nor")
+                .prettyPrint();
 
+        RestAssured.given()
+                .get("https://restcountries-v1.p.rapidapi.com/alpha/?codes=co;nor")
+                .then()
+                .statusCode(SC_UNAUTHORIZED).and().body(equalTo(""));
+    }
     @Test(description = "Get country by one code")
 //---------------------simple pass tests with headers
     void getCountryByOneCodePass() {
@@ -54,7 +59,7 @@ public class GetCountriesByCodeTest {
                 .when()
                 .get("https://restcountries-v1.p.rapidapi.com/alpha/?codes=co;nor")
                 .then()
-                .statusCode(200);
+                .statusCode(SC_OK);
     }
 
     @Test(description = "Get country by one code")
@@ -74,7 +79,7 @@ public class GetCountriesByCodeTest {
                 .body("name", is(asList("Colombia", "Norway")))
                 .body("altSpellings[0]", hasItem("CO"))
                 .body("translations[0].de", is("Kolumbien"))
-                .body("name", not("Russia"));
+                .body("name", Matchers.not(Matchers.contains("Russia")));
     }
 
     @Test(description = "Get country by one code")
@@ -92,7 +97,7 @@ public class GetCountriesByCodeTest {
                 .param("codes", "co;nor")
                 .get("alpha/")
                 .then()
-                .statusCode(400).and()
+                .statusCode(200).and()
                 .body("name[0]", is("Colombia"))
                 .body("name[1]", is("Norway"))
                 .body("name", is(asList("Colombia", "Norway")))
